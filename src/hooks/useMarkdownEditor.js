@@ -32,12 +32,14 @@ const useMarkdownEditor = () => {
         };
     }, [markdown]);
 
-    // Show status message with auto-hide
+    // Show status message (Toast component handles auto-hide)
     const showStatus = useCallback((message, type) => {
         setStatus({ message, type });
-        setTimeout(() => {
-            setStatus({ message: '', type: '' });
-        }, 3000);
+    }, []);
+
+    // Clear status (for manual dismiss)
+    const clearStatus = useCallback(() => {
+        setStatus({ message: '', type: '' });
     }, []);
 
     // Handle file upload
@@ -179,6 +181,7 @@ const useMarkdownEditor = () => {
         markdown,
         setMarkdown,
         status,
+        clearStatus,
         pdfFilename,
         setPdfFilename,
         isFullscreen,

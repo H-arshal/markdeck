@@ -1,8 +1,9 @@
 import { useRef } from 'react';
-import { Header, StatusMessage, Controls, Editor, Preview } from './components';
+import { Header, Toast, Controls, Editor, Preview, Footer } from './components';
 import { useMarkdownEditor, useTheme } from './hooks';
 import './styles/components.css';
 import './styles/preview.css';
+import './styles/toast.css';
 
 function App() {
     const previewRef = useRef(null);
@@ -12,6 +13,7 @@ function App() {
         markdown,
         setMarkdown,
         status,
+        clearStatus,
         pdfFilename,
         setPdfFilename,
         isFullscreen,
@@ -42,7 +44,14 @@ function App() {
                 <Header isDark={isDark} onToggleTheme={toggleTheme} />
             )}
             
-            <StatusMessage message={status.message} type={status.type} />
+            {/* Toast Notifications */}
+            {status.message && (
+                <Toast 
+                    message={status.message} 
+                    type={status.type} 
+                    onClose={clearStatus}
+                />
+            )}
             
             {!isFullscreen && (
                 <Controls
@@ -69,6 +78,8 @@ function App() {
                     <Preview ref={previewRef} markdown={markdown} />
                 )}
             </div>
+
+            {!isFullscreen && <Footer />}
         </div>
     );
 }
