@@ -7,7 +7,8 @@ const Editor = ({
     onKeyboardShortcut, 
     onFileDrop,
     isFullscreen,
-    onToggleFullscreen 
+    onToggleFullscreen,
+    fontSize
 }) => {
     const [isDragOver, setIsDragOver] = useState(false);
 
@@ -94,6 +95,7 @@ const Editor = ({
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
                     onKeyDown={handleKeyDown}
+                    style={{ fontSize: `${fontSize}px` }}
                     placeholder={`Start writing your markdown here...
 
 # Heading 1

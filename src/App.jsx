@@ -21,12 +21,12 @@ function App() {
             >
                 <Routes>
                     <Route path="/" element={<Home editor={editor} />} />
-                    <Route 
-                        path="/templates" 
-                        element={<Templates onSelectTemplate={editor.setMarkdown} />} 
-                    />
+                    <Route path="/templates" element={<Templates onSelectTemplate={editor.setMarkdown} />} />
                     <Route path="/guide" element={<Guide />} />
-                    <Route path="/settings" element={<Settings />} />
+                    <Route 
+                        path="/settings" 
+                        element={<Settings settings={editor.settings} setSettings={editor.setSettings} />} 
+                    />
                     <Route path="/about" element={<About />} />
                 </Routes>
             </Layout>

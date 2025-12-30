@@ -1,4 +1,4 @@
- import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import html2pdf from 'html2pdf.js';
 
 const STORAGE_KEY = 'markdown-editor-content';
@@ -13,7 +13,24 @@ const useMarkdownEditor = () => {
     const [status, setStatus] = useState({ message: '', type: '' });
     const [pdfFilename, setPdfFilename] = useState('markdown-document');
     const [isFullscreen, setIsFullscreen] = useState(false);
+
+    // PDF & Editor Settings
+    const [settings, setSettings] = useState(() => {
+        const saved = localStorage.getItem('markdeck-settings');
+        return saved ? JSON.parse(saved) : {
+            pageFormat: 'a4',
+            orientation: 'portrait',
+            margins: 10,
+            editorFontSize: 16,
+        };
+    });
+
     const autoSaveTimeoutRef = useRef(null);
+
+    // Save settings to localStorage
+    useEffect(() => {
+        localStorage.setItem('markdeck-settings', JSON.stringify(settings));
+    }, [settings]);
 
     // Auto-save to localStorage with debounce
     useEffect(() => {
@@ -74,22 +91,22 @@ const useMarkdownEditor = () => {
         const element = document.createElement('div');
         element.innerHTML = previewElement.innerHTML;
         element.style.padding = '20px';
-        element.style.fontSize = '14px';
+        element.style.fontSize = `${settings.editorFontSize}px`;
         element.style.lineHeight = '1.6';
         element.style.color = '#0f172a'; // Force dark text for PDF
         element.style.backgroundColor = '#ffffff';
 
         const opt = {
-            margin: [10, 10, 10, 10],
+            margin: [settings.margins, settings.margins, settings.margins, settings.margins],
             filename: `${pdfFilename}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, backgroundColor: '#ffffff' },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            jsPDF: { unit: 'mm', format: settings.pageFormat, orientation: settings.orientation }
         };
 
         html2pdf().set(opt).from(element).save();
         showStatus('PDF exported successfully!', 'success');
-    }, [markdown, pdfFilename, showStatus]);
+    }, [markdown, pdfFilename, showStatus, settings]);
 
     // Copy HTML to clipboard
     const handleCopyHTML = useCallback((previewElement) => {
@@ -186,6 +203,8 @@ const useMarkdownEditor = () => {
         setPdfFilename,
         isFullscreen,
         toggleFullscreen,
+        settings,
+        setSettings,
         handleFileUpload,
         handleClear,
         handleExportPDF,

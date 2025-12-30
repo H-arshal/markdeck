@@ -42,6 +42,7 @@ const Home = ({ editor }) => {
                     onFileDrop={editor.handleFileUpload}
                     isFullscreen={editor.isFullscreen}
                     onToggleFullscreen={editor.toggleFullscreen}
+                    fontSize={editor.settings.editorFontSize}
                 />
                 {!editor.isFullscreen && (
                     <Preview ref={previewRef} markdown={editor.markdown} />
