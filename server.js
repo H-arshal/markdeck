@@ -69,7 +69,8 @@ app.post('/api/generate-pdf', async (req, res) => {
 });
 
 // Catch-all route to serve index.html for client-side routing
-app.get('*', (req, res) => {
+// In Express 5, app.use() without a path acts as a reliable catch-all
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
