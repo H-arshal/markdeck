@@ -3,7 +3,15 @@ import { marked } from 'marked';
 import { Eye, FileText } from 'lucide-react';
 
 // Configure marked options
+const renderer = new marked.Renderer();
+
+renderer.heading = ({ text, depth }) => {
+    const slug = text.toLowerCase().replace(/[^\w]+/g, '-');
+    return `<h${depth} id="${slug}">${text}</h${depth}>`;
+};
+
 marked.setOptions({
+    renderer,
     breaks: true,
     gfm: true,
 });

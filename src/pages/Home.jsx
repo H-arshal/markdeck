@@ -21,7 +21,7 @@ const Home = ({ editor }) => {
             {!editor.isFullscreen && (
                 <Header />
             )}
-            
+
             {!editor.isFullscreen && (
                 <Controls
                     onFileUpload={editor.handleFileUpload}
@@ -31,12 +31,14 @@ const Home = ({ editor }) => {
                     onDownloadMd={editor.handleDownloadMd}
                     pdfFilename={editor.pdfFilename}
                     onFilenameChange={editor.setPdfFilename}
+                    includeTOC={editor.settings.includeTOC}
+                    onToggleTOC={() => editor.setSettings(prev => ({ ...prev, includeTOC: !prev.includeTOC }))}
                 />
             )}
-            
+
             <div className={`content-wrapper ${editor.isFullscreen ? 'content-wrapper-fullscreen' : ''}`}>
-                <Editor 
-                    value={editor.markdown} 
+                <Editor
+                    value={editor.markdown}
                     onChange={editor.setMarkdown}
                     onKeyboardShortcut={editor.handleKeyboardShortcut}
                     onFileDrop={editor.handleFileUpload}

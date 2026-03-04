@@ -1,14 +1,16 @@
 import { useRef, useState } from 'react';
 import { Upload, Trash2, Download, Copy, FileDown, FileText } from 'lucide-react';
 
-const Controls = ({ 
-    onFileUpload, 
-    onClear, 
-    onExportPDF, 
-    onCopyHTML, 
+const Controls = ({
+    onFileUpload,
+    onClear,
+    onExportPDF,
+    onCopyHTML,
     onDownloadMd,
     pdfFilename,
-    onFilenameChange 
+    onFilenameChange,
+    includeTOC,
+    onToggleTOC
 }) => {
     const fileInputRef = useRef(null);
     const [showFilenameInput, setShowFilenameInput] = useState(false);
@@ -62,6 +64,14 @@ const Controls = ({
                 <button className="btn btn-secondary" onClick={onClear}>
                     <Trash2 size={18} />
                     <span>Clear</span>
+                </button>
+                <button
+                    className={`btn ${includeTOC ? 'btn-primary' : 'btn-secondary'}`}
+                    onClick={onToggleTOC}
+                    title={includeTOC ? 'TOC will be included' : 'TOC will be excluded'}
+                >
+                    <FileText size={18} />
+                    <span>{includeTOC ? 'TOC: ON' : 'TOC: OFF'}</span>
                 </button>
             </div>
 

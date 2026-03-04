@@ -1,8 +1,31 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import html2pdf from 'html2pdf.js';
+import { marked } from 'marked';
 
 const STORAGE_KEY = 'markdown-editor-content';
 const AUTO_SAVE_DELAY = 1000; // 1 second debounce
+
+// Internal TOC Generator Helper
+const generateTOC = (markdown) => {
+    const tokens = marked.lexer(markdown);
+    let toc = '<div class="pdf-toc"><h2>Table of Contents</h2><ul>';
+    let hasHeadings = false;
+
+    tokens.forEach(token => {
+        if (token.type === 'heading') {
+            hasHeadings = true;
+            const slug = token.text.toLowerCase().replace(/[^\w]+/g, '-');
+            toc += `
+                <li class="toc-level-${token.depth}">
+                    <a href="#${slug}">
+                        ${token.text}
+                    </a>
+                </li>`;
+        }
+    });
+
+    toc += '</ul></div>';
+    return hasHeadings ? toc : '';
+};
 
 const useMarkdownEditor = () => {
     // Load from localStorage on initial render
@@ -22,6 +45,7 @@ const useMarkdownEditor = () => {
             orientation: 'portrait',
             margins: 10,
             editorFontSize: 16,
+            includeTOC: true,
         };
     });
 
@@ -82,30 +106,77 @@ const useMarkdownEditor = () => {
     }, [markdown, showStatus]);
 
     // Export to PDF
-    const handleExportPDF = useCallback((previewElement) => {
+    const handleExportPDF = useCallback(async (previewElement) => {
         if (!markdown.trim()) {
             showStatus('Please enter some markdown content first!', 'error');
             return;
         }
 
-        const element = document.createElement('div');
-        element.innerHTML = previewElement.innerHTML;
-        element.style.padding = '20px';
-        element.style.fontSize = `${settings.editorFontSize}px`;
-        element.style.lineHeight = '1.6';
-        element.style.color = '#0f172a'; // Force dark text for PDF
-        element.style.backgroundColor = '#ffffff';
+        showStatus('Generating PDF...', 'info');
 
-        const opt = {
-            margin: [settings.margins, settings.margins, settings.margins, settings.margins],
-            filename: `${pdfFilename}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, backgroundColor: '#ffffff' },
-            jsPDF: { unit: 'mm', format: settings.pageFormat, orientation: settings.orientation }
-        };
+        try {
+            const tocHTML = settings.includeTOC ? generateTOC(markdown) : '';
+            const contentHTML = previewElement.innerHTML;
 
-        html2pdf().set(opt).from(element).save();
-        showStatus('PDF exported successfully!', 'success');
+            // Combine TOC and content for professional PDF
+            const fullHTML = `
+                <div class="pdf-wrapper">
+                    <style>
+                        .pdf-wrapper { font-family: sans-serif; padding: 20px; color: #0f172a; background: white; }
+                        .pdf-toc { margin-bottom: 40px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; }
+                        .pdf-toc ul { list-style: none; padding: 0; }
+                        .pdf-toc li { margin-bottom: 8px; }
+                        .pdf-toc a { color: #2563eb; text-decoration: none; }
+                        .toc-level-1 { font-weight: bold; font-size: 1.2em; }
+                        .toc-level-2 { margin-left: 20px; }
+                        .toc-level-3 { margin-left: 40px; }
+                        h1, h2, h3, h4, h5, h6 { color: #1e293b; margin-top: 1.5em; }
+                        pre { background: #f1f5f9; padding: 12px; border-radius: 6px; overflow-x: auto; }
+                        code { font-family: monospace; }
+                        img { max-width: 100%; height: auto; }
+                    </style>
+                    ${tocHTML}
+                    <div class="pdf-content">
+                        ${contentHTML}
+                    </div>
+                </div>
+            `;
+
+            const response = await fetch('/api/generate-pdf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    html: fullHTML,
+                    settings: {
+                        pageFormat: settings.pageFormat,
+                        orientation: settings.orientation,
+                        margins: settings.margins
+                    },
+                    filename: pdfFilename
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to generate PDF');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${pdfFilename}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+            showStatus('PDF exported successfully!', 'success');
+        } catch (error) {
+            console.error('PDF Export Error:', error);
+            showStatus(`Error: ${error.message}`, 'error');
+        }
     }, [markdown, pdfFilename, showStatus, settings]);
 
     // Copy HTML to clipboard
