@@ -6,6 +6,8 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 20
+      - key: PUPPETEER_CACHE_DIR
+        value: /opt/render/project/src/.cache/puppeteer
     routes:
       - type: rewrite
         source: /*
