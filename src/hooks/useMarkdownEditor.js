@@ -21,7 +21,7 @@ const useMarkdownEditor = () => {
     const [settings, setSettings] = useLocalStorage('markdeck-settings', defaultSettings);
     
     const [pdfFilename, setPdfFilename] = useState('markdown-document');
-    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [fullscreenMode, setFullscreenMode] = useState('none'); // 'none', 'editor', 'preview'
 
     // 2. Status Hook
     const { status, showStatus, clearStatus } = useStatus();
@@ -74,8 +74,8 @@ const useMarkdownEditor = () => {
         showStatus('Markdown file downloaded!', 'success');
     }, [markdown, pdfFilename, showStatus]);
 
-    const toggleFullscreen = useCallback(() => {
-        setIsFullscreen(prev => !prev);
+    const toggleFullscreen = useCallback((mode) => {
+        setFullscreenMode(prev => prev === mode ? 'none' : mode);
     }, []);
 
     // 4. Feature Hooks
@@ -100,7 +100,7 @@ const useMarkdownEditor = () => {
         clearStatus,
         pdfFilename,
         setPdfFilename,
-        isFullscreen,
+        fullscreenMode,
         toggleFullscreen,
         settings,
         setSettings,

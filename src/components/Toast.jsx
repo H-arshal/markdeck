@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { CheckCircle, AlertCircle, X } from 'lucide-react';
 
 const Toast = ({ message, type, onClose }) => {

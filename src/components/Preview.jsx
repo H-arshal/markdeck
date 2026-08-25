@@ -1,6 +1,6 @@
 import { useMemo, forwardRef } from 'react';
 import { marked } from 'marked';
-import { Eye, FileText } from 'lucide-react';
+import { Eye, FileText, Maximize2, Minimize2 } from 'lucide-react';
 
 // Configure marked options
 const renderer = new marked.Renderer();
@@ -16,7 +16,7 @@ marked.setOptions({
     gfm: true,
 });
 
-const Preview = forwardRef(({ markdown }, ref) => {
+const Preview = forwardRef(({ markdown, isFullscreen, onToggleFullscreen }, ref) => {
     const html = useMemo(() => {
         if (!markdown || !markdown.trim()) {
             return null;
@@ -29,10 +29,21 @@ const Preview = forwardRef(({ markdown }, ref) => {
     }, [markdown]);
 
     return (
-        <div className="panel">
+        <div className={`panel ${isFullscreen ? 'panel-fullscreen' : ''}`}>
             <div className="panel-header">
-                <Eye size={20} />
-                Live Preview
+                <div className="panel-header-left">
+                    <Eye size={20} />
+                    Live Preview
+                </div>
+                <div className="panel-header-actions">
+                    <button 
+                        className="panel-action-btn"
+                        onClick={onToggleFullscreen}
+                        title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+                    >
+                        {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                    </button>
+                </div>
             </div>
             <div className="panel-body">
                 {html ? (
