@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "vite",
     "server": "node server.js",
-    "dev:full": "npm run server & npm run dev",
+    "dev:full": "concurrently \"npm run server\" \"npm run dev\"",
     "build": "npx puppeteer browsers install chrome && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -29,6 +29,7 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.1",
+    "concurrently": "^10.0.5",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",

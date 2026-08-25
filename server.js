@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -69,9 +70,13 @@ app.post('/api/generate-pdf', async (req, res) => {
 });
 
 // Catch-all route to serve index.html for client-side routing
-// In Express 5, app.use() without a path acts as a reliable catch-all
 app.use((req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    const indexPath = path.join(__dirname, 'dist', 'index.html');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).send('Backend is running. Frontend build not found in /dist. If you are developing, please use the Vite dev server (port 5173).');
+    }
 });
 
 app.listen(PORT, () => {
