@@ -51,7 +51,6 @@ const About = () => {
                             <span className="tech-tag">React 19</span>
                             <span className="tech-tag">Vite</span>
                             <span className="tech-tag">Lucide Icons</span>
-                            <span className="tech-tag">html2pdf.js</span>
                             <span className="tech-tag">Marked.js</span>
                         </div>
                     </section>
