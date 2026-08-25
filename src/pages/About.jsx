@@ -65,6 +65,7 @@ const About = () => {
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="social-link-card"
+                                    style={{ '--brand-color': link.color }}
                                 >
                                     <link.icon size={24} />
                                     <span>{link.label}</span>
