@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { Header, Toast, Controls, Editor, Preview } from '../components';
+import { Toast, Controls, Editor, Preview } from '../components';
 
 const Home = ({ editor }) => {
     const previewRef = useRef(null);
@@ -18,10 +18,6 @@ const Home = ({ editor }) => {
 
     return (
         <>
-            {!editor.isFullscreen && (
-                <Header />
-            )}
-
             {!editor.isFullscreen && (
                 <Controls
                     onFileUpload={editor.handleFileUpload}

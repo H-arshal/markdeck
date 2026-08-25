@@ -3,8 +3,8 @@ import { Github, Linkedin, Mail, Globe, Heart, Coffee } from 'lucide-react';
 const About = () => {
     const socialLinks = [
         { icon: Github, label: 'GitHub', url: 'https://github.com/H-arshal', color: '#333' },
-        { icon: Linkedin, label: 'LinkedIn', url: 'https://linkedin.com/in/harshalmoon', color: '#0077b5' },
-        { icon: Globe, label: 'Portfolio', url: 'https://harshalmoon.me', color: '#7c3aed' },
+        { icon: Linkedin, label: 'LinkedIn', url: 'https://www.linkedin.com/in/harshal-moon-064956174/', color: '#0077b5' },
+        { icon: Globe, label: 'Portfolio', url: 'https://h-arshal.github.io/Portfolio/', color: '#7c3aed' },
         { icon: Mail, label: 'Email', url: 'mailto:contact@harshalmoon.me', color: '#ea4335' },
     ];
 
