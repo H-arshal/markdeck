@@ -36,10 +36,18 @@ const useTheme = () => {
     }, []);
 
     const toggleTheme = useCallback(() => {
-        setTheme(prev => prev === 'light' ? 'dark' : 'light');
+        setTheme(prev => {
+            const next = prev === 'light' ? 'dark' : 'light';
+            console.log('🔄 Theme toggled! Changing from', prev, 'to', next);
+            return next;
+        });
     }, []);
 
     const isDark = theme === 'dark';
+    
+    useEffect(() => {
+        console.log('🎨 Current applied theme is:', theme);
+    }, [theme]);
 
     return { theme, toggleTheme, isDark };
 };

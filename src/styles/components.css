@@ -623,18 +623,18 @@
     justify-content: center;
     width: 44px;
     height: 44px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-full);
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: var(--color-surface);
+    color: var(--color-text);
     cursor: pointer;
     transition: all var(--transition-base);
-    backdrop-filter: blur(10px);
 }
 
 .theme-toggle:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: var(--color-primary-light);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
     transform: scale(1.05);
 }
 

@@ -4,6 +4,13 @@ import { CheckCircle, AlertCircle, X } from 'lucide-react';
 const Toast = ({ message, type, onClose }) => {
     const [isExiting, setIsExiting] = useState(false);
 
+    const handleClose = useCallback(() => {
+        setIsExiting(true);
+        setTimeout(() => {
+            onClose?.();
+        }, 300); // Match animation duration
+    }, [onClose]);
+
     useEffect(() => {
         // Auto-dismiss after 3 seconds
         const timer = setTimeout(() => {
@@ -11,14 +18,7 @@ const Toast = ({ message, type, onClose }) => {
         }, 3000);
 
         return () => clearTimeout(timer);
-    }, []);
-
-    const handleClose = () => {
-        setIsExiting(true);
-        setTimeout(() => {
-            onClose?.();
-        }, 300); // Match animation duration
-    };
+    }, [handleClose]);
 
     if (!message) return null;
 
