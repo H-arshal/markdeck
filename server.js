@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import https from 'https';
 
 dotenv.config();
 
@@ -19,6 +20,13 @@ app.use(express.json({ limit: '50mb' }));
 
 // Serve static files from the 'dist' directory
 app.use(express.static(path.join(__dirname, 'dist')));
+
+// --- Keep-Alive Ping ---
+// Render shuts down free web services after 15 minutes of inactivity.
+// This endpoint is used by the self-ping mechanism below.
+app.get('/api/ping', (req, res) => {
+    res.status(200).send('pong');
+});
 
 app.post('/api/generate-pdf', async (req, res) => {
     const { html, settings, filename } = req.body;
@@ -81,4 +89,18 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+    
+    // Start the keep-alive interval if running on Render
+    const RENDER_EXTERNAL_URL = process.env.RENDER_EXTERNAL_URL;
+    if (RENDER_EXTERNAL_URL) {
+        console.log(`Keep-alive ping scheduled for ${RENDER_EXTERNAL_URL}/api/ping every 14 minutes.`);
+        setInterval(() => {
+            console.log(`Sending keep-alive ping to ${RENDER_EXTERNAL_URL}/api/ping...`);
+            https.get(`${RENDER_EXTERNAL_URL}/api/ping`, (res) => {
+                console.log(`Keep-alive ping successful: ${res.statusCode}`);
+            }).on('error', (err) => {
+                console.error('Keep-alive ping failed:', err.message);
+            });
+        }, 14 * 60 * 1000); // 14 minutes in milliseconds
+    }
 });
