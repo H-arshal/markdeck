@@ -61,7 +61,8 @@ const usePdfExport = ({ markdown, settings, pdfFilename, showStatus }) => {
                 </div>
             `;
 
-            const response = await fetch('/api/generate-pdf', {
+            const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+            const response = await fetch(`${API_BASE}/api/generate-pdf`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
