@@ -18,8 +18,11 @@ const PORT = process.env.PORT || 3001;
 app.use(cors({
     origin: [
         'http://localhost:5173',
-        'https://h-arshal.github.io'
-    ],
+        'http://localhost:3001',
+        'https://h-arshal.github.io',
+        process.env.RENDER_EXTERNAL_URL,
+        /\.onrender\.com$/
+    ].filter(Boolean),
     credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
@@ -44,7 +47,13 @@ app.post('/api/generate-pdf', async (req, res) => {
     let browser;
     try {
         browser = await puppeteer.launch({
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu'
+            ],
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
         });
         const page = await browser.newPage();
 
