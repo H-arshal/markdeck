@@ -1,7 +1,13 @@
 services:
   - type: web
     name: markdeck
-    buildCommand: npm install && npx puppeteer browsers install chrome && npm run build
+    runtime: node
+    plan: free
+    region: oregon
+    branch: master
+    healthCheckPath: /api/ping
+    autoDeploy: true
+    buildCommand: npm ci && npx puppeteer browsers install chrome && npm run build
     startCommand: npm run server
     envVars:
       - key: NODE_VERSION
