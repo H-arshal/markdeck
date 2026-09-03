@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { Layout } from './components';
 import { Home, Templates, Guide, Settings, About } from './pages';
 import { useMarkdownEditor, useTheme } from './hooks';
