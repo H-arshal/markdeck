@@ -27,7 +27,7 @@ jobs:
       - name: Build for GitHub Pages
         env:
           VITE_BASE: /markdeck/
-          VITE_API_BASE_URL: https://markdeck.onrender.com
+          VITE_API_BASE_URL: https://markdeck-zpew.onrender.com
         run: npm run build
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
