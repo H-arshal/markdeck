@@ -49,12 +49,42 @@ const useMarkdownEditor = () => {
 
     const handleCopyHTML = useCallback((previewElement) => {
         const html = previewElement?.innerHTML || '';
+        const text = previewElement?.innerText || '';
+
+        // Prefer the rich-text ClipboardItem API so rich targets (Gmail, Docs,
+        // Notion, Word) paste formatted content. Fall back to plain writeText
+        // for older browsers / insecure contexts.
+        if (typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
+            const item = new ClipboardItem({
+                'text/html': new Blob([html], { type: 'text/html' }),
+                'text/plain': new Blob([text], { type: 'text/plain' }),
+            });
+            navigator.clipboard.write([item]).then(() => {
+                showStatus('Formatted content copied to clipboard!', 'success');
+            }).catch(() => {
+                showStatus('Failed to copy formatted content', 'error');
+            });
+            return;
+        }
+
         navigator.clipboard.writeText(html).then(() => {
             showStatus('HTML copied to clipboard!', 'success');
         }).catch(() => {
             showStatus('Failed to copy HTML', 'error');
         });
     }, [showStatus]);
+
+    const handleCopyMarkdown = useCallback(() => {
+        if (!markdown.trim()) {
+            showStatus('Nothing to copy — the editor is empty.', 'error');
+            return;
+        }
+        navigator.clipboard.writeText(markdown).then(() => {
+            showStatus('Markdown copied to clipboard!', 'success');
+        }).catch(() => {
+            showStatus('Failed to copy Markdown', 'error');
+        });
+    }, [markdown, showStatus]);
 
     const handleDownloadMd = useCallback(() => {
         if (!markdown.trim()) {
@@ -108,6 +138,7 @@ const useMarkdownEditor = () => {
         handleClear,
         handleExportPDF,
         handleCopyHTML,
+        handleCopyMarkdown,
         handleDownloadMd,
         handleKeyboardShortcut,
     };

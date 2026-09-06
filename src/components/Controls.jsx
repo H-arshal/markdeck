@@ -6,6 +6,7 @@ const Controls = ({
     onClear,
     onExportPDF,
     onCopyHTML,
+    onCopyMarkdown,
     onDownloadMd,
     pdfFilename,
     onFilenameChange,
@@ -73,6 +74,10 @@ const Controls = ({
                     <FileText size={18} />
                     <span>{includeTOC ? 'TOC: ON' : 'TOC: OFF'}</span>
                 </button>
+                <button className="btn btn-secondary" onClick={onCopyMarkdown} title="Copy raw Markdown to clipboard">
+                    <Copy size={18} />
+                    <span>MD</span>
+                </button>
             </div>
 
             <div className="controls-right">
@@ -98,9 +103,9 @@ const Controls = ({
                     <FileDown size={18} />
                     <span>.md</span>
                 </button>
-                <button className="btn btn-secondary" onClick={onCopyHTML} title="Copy HTML to clipboard">
+                <button className="btn btn-secondary" onClick={onCopyHTML} title="Copy preview with formatting (paste into Docs, Gmail, Notion, Word)">
                     <Copy size={18} />
-                    <span>HTML</span>
+                    <span>Rich Text</span>
                 </button>
             </div>
         </div>

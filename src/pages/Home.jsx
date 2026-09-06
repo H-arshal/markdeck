@@ -17,6 +17,10 @@ const Home = ({ editor }) => {
         }
     };
 
+    const onCopyMarkdown = () => {
+        editor.handleCopyMarkdown();
+    };
+
     return (
         <>
             {editor.fullscreenMode === 'none' && (
@@ -25,6 +29,7 @@ const Home = ({ editor }) => {
                     onClear={editor.handleClear}
                     onExportPDF={onExportPDF}
                     onCopyHTML={onCopyHTML}
+                    onCopyMarkdown={onCopyMarkdown}
                     onDownloadMd={editor.handleDownloadMd}
                     pdfFilename={editor.pdfFilename}
                     onFilenameChange={editor.setPdfFilename}
