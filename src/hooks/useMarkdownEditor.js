@@ -119,7 +119,8 @@ const useMarkdownEditor = () => {
     const { handleKeyboardShortcut } = useEditorShortcuts({ 
         markdown, 
         setMarkdown, 
-        handleDownloadMd 
+        handleDownloadMd,
+        handleCopyMarkdown
     });
 
     // 5. Return Exact Original Interface

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-const useEditorShortcuts = ({ markdown, setMarkdown, handleDownloadMd }) => {
+const useEditorShortcuts = ({ markdown, setMarkdown, handleDownloadMd, handleCopyMarkdown }) => {
     // Keyboard shortcut handler - insert formatting
     const insertFormatting = useCallback((textarea, prefix, suffix = prefix) => {
         const start = textarea.selectionStart;
@@ -48,6 +48,13 @@ const useEditorShortcuts = ({ markdown, setMarkdown, handleDownloadMd }) => {
                 e.preventDefault();
                 handleDownloadMd();
                 return true;
+            case 'c': // Copy Markdown (Ctrl+Shift+C)
+                if (e.shiftKey) {
+                    e.preventDefault();
+                    handleCopyMarkdown();
+                    return true;
+                }
+                return false;
             default:
                 return false;
         }

@@ -41,7 +41,7 @@ A modern, feature-rich Markdown editor with live preview and PDF export.
 - **React 19** - UI library
 - **Vite** - Build tool & dev server
 - **marked.js** - Markdown parsing
-- **html2pdf.js** - PDF generation
+- **Puppeteer** - PDF generation (headless Chrome)
 - **Lucide React** - Icons
 
 ## 📁 Project Structure
