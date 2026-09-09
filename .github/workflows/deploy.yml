@@ -30,6 +30,8 @@ jobs:
           VITE_API_BASE_URL: https://markdeck-zpew.onrender.com
         run: npm run build
       - uses: actions/configure-pages@v4
+      - name: Add .nojekyll
+        run: touch dist/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
