@@ -116,6 +116,6 @@ app.listen(PORT, () => {
             }).on('error', (err) => {
                 console.error('Keep-alive ping failed:', err.message);
             });
-        }, 14 * 60 * 1000); // 14 minutes in milliseconds
+        }, 60 * 60 * 1000); // 14 minutes in milliseconds
     }
 });
